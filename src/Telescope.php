@@ -398,7 +398,7 @@ class Telescope
     /**
      * Set the callback that filters the entries that should be recorded.
      *
-     * @param  \Closure $callback
+     * @param  \Closure  $callback
      * @return static
      */
     public static function filter(Closure $callback)
@@ -411,7 +411,7 @@ class Telescope
     /**
      * Set the callback that adds tags to the record.
      *
-     * @param  \Closure $callback
+     * @param  \Closure  $callback
      * @return static
      */
     public static function tag(Closure $callback)
@@ -424,12 +424,12 @@ class Telescope
     /**
      * Store the queued entries and flush the queue.
      *
-     * @param  \Laravel\Telescope\Contracts\EntriesRepository $storage
+     * @param  \Laravel\Telescope\Contracts\EntriesRepository  $storage
      * @return void
      */
     public static function store(EntriesRepository $storage)
     {
-        if (empty(static::$entriesQueue)) {
+        if (empty(static::$entriesQueue) && empty(static::$updatesQueue)) {
             return;
         }
 
@@ -447,7 +447,7 @@ class Telescope
                 static::pruneEntries($storage, config('telescope.limit'));
             }
         } catch (Exception $e) {
-            resolve(ExceptionHandler::class)->report($e);
+            app(ExceptionHandler::class)->report($e);
         }
 
         static::$entriesQueue = [];
@@ -511,7 +511,7 @@ class Telescope
     }
 
     /**
-     * Hide the given request parameters;
+     * Hide the given request parameters.
      *
      * @param  array  $attributes
      * @return static

@@ -88,7 +88,7 @@ class IncomingEntry
      */
     public static function make(...$arguments)
     {
-        return (new static(...$arguments));
+        return new static(...$arguments);
     }
 
     /**
@@ -120,7 +120,7 @@ class IncomingEntry
     /**
      * Set the currently authenticated user.
      *
-     * @param  mixed  $user
+     * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
      * @return $this
      */
     public function user($user)
@@ -129,7 +129,7 @@ class IncomingEntry
 
         $this->content = array_merge($this->content, [
             'user' => [
-                'id' => $user->getKey(),
+                'id' => $user->getAuthIdentifier(),
                 'name' => $user->name ?? null,
                 'email' => $user->email ?? null,
             ],
@@ -161,7 +161,7 @@ class IncomingEntry
     public function hasMonitoredTag()
     {
         if (! empty($this->tags)) {
-            return resolve(EntriesRepository::class)->isMonitoring($this->tags);
+            return app(EntriesRepository::class)->isMonitoring($this->tags);
         }
 
         return false;
@@ -174,7 +174,7 @@ class IncomingEntry
      */
     public function isFailedJob()
     {
-        return $this->type == EntryType::JOB &&
+        return $this->type === EntryType::JOB &&
                ($this->content['status'] ?? null) === 'failed';
     }
 

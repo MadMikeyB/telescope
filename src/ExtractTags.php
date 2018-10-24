@@ -4,6 +4,7 @@ namespace Laravel\Telescope;
 
 use stdClass;
 use ReflectionClass;
+use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Mail\SendQueuedMailable;
 use Illuminate\Events\CallQueuedListener;
@@ -136,8 +137,6 @@ class ExtractTags
      *
      * @param  array  $targets
      * @return \Illuminate\Support\Collection
-     *
-     * @throws \ReflectionException
      */
     protected static function modelsFor(array $targets)
     {
@@ -157,7 +156,7 @@ class ExtractTags
             })->collapse()->filter()->all();
         }
 
-        return collect(array_collapse($models))->unique();
+        return collect(Arr::collapse($models))->unique();
     }
 
     /**
